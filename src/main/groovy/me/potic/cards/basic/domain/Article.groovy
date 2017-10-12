@@ -1,8 +1,10 @@
 package me.potic.cards.basic.domain
 
+import groovy.transform.ToString
 import groovy.transform.builder.Builder
 
 @Builder
+@ToString
 class Article {
 
     String id
@@ -11,5 +13,5 @@ class Article {
 
     Map<String, Object> fromPocket
 
-    Map<String, Object> basicCard
+    Card basicCard
 }

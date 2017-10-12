@@ -21,7 +21,7 @@ warn "Pulling latest docker image..."
 docker pull potic/potic-basic-cards:$TAG_TO_DEPLOY
 
 warn "Starting docker image..."
-docker run -dit --name potic-basic-cards -e LOG_PATH=/logs -v /logs:/logs -p 40406:8080 potic/potic-basic-cards:$TAG_TO_DEPLOY
+docker run -dit --name potic-basic-cards --link potic-articles -e LOG_PATH=/logs -v /logs:/logs -p 40406:8080 potic/potic-basic-cards:$TAG_TO_DEPLOY
 
 warn "Currently running docker images"
 docker ps -a

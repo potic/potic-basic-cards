@@ -3,6 +3,8 @@ package me.potic.cards.basic.service
 import com.codahale.metrics.annotation.Timed
 import groovy.util.logging.Slf4j
 import me.potic.cards.basic.domain.Article
+import me.potic.cards.basic.domain.Card
+import org.apache.commons.lang3.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.scheduling.annotation.Scheduled
@@ -32,37 +34,40 @@ class CollectBasicCardsService {
     @Timed(name = 'collectBasicCard')
     Article collectBasicCard(Article article) {
         if (article.basicCard == null) {
-            article.basicCard = [:]
+            article.basicCard = new Card()
         }
 
-        determinePocketId(article)
-        determineUrl(article)
-        determineTitle(article)
-        determineSource(article)
-        determineExcerpt(article)
-        determineImage(article)
-
+        article.basicCard.id = article.id
         article.basicCard.actual = true
+        article.basicCard.actual &= determinePocketId(article)
+        article.basicCard.actual &= determineUrl(article)
+        article.basicCard.actual &= determineTitle(article)
+        article.basicCard.actual &= determineSource(article)
+        article.basicCard.actual &= determineExcerpt(article)
+        article.basicCard.actual &= determineImage(article)
 
         return article
     }
 
-    static void determinePocketId(Article article) {
+    static boolean determinePocketId(Article article) {
         String pocketId = (article.fromPocket.resolved_id ?: article.fromPocket.item_id)
         if (pocketId != null && pocketId != '0') {
             article.basicCard.pocketId = pocketId
         }
+        return true
     }
 
-    static void determineUrl(Article article) {
+    static boolean determineUrl(Article article) {
         article.basicCard.url = (article.fromPocket.resolved_url ?: article.fromPocket.given_url)
+        return StringUtils.isNoneBlank(article.basicCard.url)
     }
 
-    static void determineTitle(Article article) {
+    static boolean determineTitle(Article article) {
         article.basicCard.title = (article.fromPocket.resolved_title ?: article.fromPocket.given_title)
+        return StringUtils.isNoneBlank(article.basicCard.title)
     }
 
-    static void determineSource(Article article) {
+    static boolean determineSource(Article article) {
         String url = (article.fromPocket.resolved_url ?: article.fromPocket.given_url)
         if (url != null) {
             int startIndex = 0
@@ -95,20 +100,23 @@ class CollectBasicCardsService {
 
             article.basicCard.source = url.substring(startIndex, endIndex)
         }
+        return true
     }
 
-    static void determineExcerpt(Article article) {
+    static boolean determineExcerpt(Article article) {
         if (article.fromPocket.excerpt) {
             article.basicCard.excerpt = article.fromPocket.excerpt
         }
+        return true
     }
 
-    static void determineImage(Article article) {
+    static boolean determineImage(Article article) {
         if (article.fromPocket.containsKey('image')) {
-            article.basicCard.image = [ src: article.fromPocket.image['src'] ]
+            article.basicCard.image = new Card.Image(src: article.fromPocket.image['src'])
         }
         if (article.fromPocket.containsKey('images') && article.fromPocket.images.containsKey('1') ) {
-            article.basicCard.image = [ src: article.fromPocket.images['1']['src'] ]
+            article.basicCard.image = new Card.Image(src: article.fromPocket.images['1']['src'])
         }
+        return true
     }
 }
