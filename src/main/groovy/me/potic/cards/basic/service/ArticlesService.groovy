@@ -22,19 +22,26 @@ class ArticlesService {
     }
 
     @Timed(name = 'findNonActualArticles')
-    Collection<Article> findNonActualArticles(String groupName, int count) {
-        log.info "finding non-actual articles for group ${groupName}..."
+    Collection<Article> findNonActualArticles(int count) {
+        log.info "finding non-actual articles..."
 
         try {
-            Collection response = articlesServiceRest.get(Collection) {
-                request.uri.path = '/article/search/nonActual'
-                request.uri.query = [ group: groupName, count: count ]
+            def response = articlesServiceRest.post {
+                request.uri.path = '/graphql'
+                request.contentType = 'application/json'
+                request.body = [ query: """
+                    {
+                      withNonActualBasicCard(count: ${count}) {
+                        id
+                      }
+                    }
+                """ ]
             }
 
-            return response.collect({ new Article(it) })
+            return response.data.withNonActualBasicCard.collect({ new Article(it) })
         } catch (e) {
-            log.error "finding non-actual articles for group ${groupName} failed: $e.message", e
-            throw new RuntimeException("finding non-actual articles for group ${groupName} failed", e)
+            log.error "finding non-actual articles failed: $e.message", e
+            throw new RuntimeException("finding non-actual articles failed", e)
         }
     }
 
@@ -45,8 +52,8 @@ class ArticlesService {
         try {
             articlesServiceRest.put {
                 request.uri.path = '/article'
-                request.body = article
                 request.contentType = 'application/json'
+                request.body = article
             }
         } catch (e) {
             log.error "updating article ${article} failed: $e.message", e

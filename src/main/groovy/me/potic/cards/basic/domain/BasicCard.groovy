@@ -1,6 +1,11 @@
 package me.potic.cards.basic.domain
 
-class Card {
+import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
+
+@EqualsAndHashCode
+@ToString
+class BasicCard {
 
     String id
 
@@ -16,9 +21,5 @@ class Card {
 
     String excerpt
 
-    Image image
-
-    static class Image {
-        String src
-    }
+    CardImage image
 }

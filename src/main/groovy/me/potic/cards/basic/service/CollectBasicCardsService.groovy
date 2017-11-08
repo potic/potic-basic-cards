@@ -3,7 +3,8 @@ package me.potic.cards.basic.service
 import com.codahale.metrics.annotation.Timed
 import groovy.util.logging.Slf4j
 import me.potic.cards.basic.domain.Article
-import me.potic.cards.basic.domain.Card
+import me.potic.cards.basic.domain.BasicCard
+import me.potic.cards.basic.domain.CardImage
 import org.apache.commons.lang3.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -25,7 +26,7 @@ class CollectBasicCardsService {
     void collectBasicCards() {
         log.info("collecting basic cards...")
 
-        Collection<Article> articlesToProcess = articlesService.findNonActualArticles('basicCard', articlesRequestSize)
+        Collection<Article> articlesToProcess = articlesService.findNonActualArticles(articlesRequestSize)
         log.info("got ${articlesToProcess.size()} articles to collect basic cards...")
 
         articlesToProcess.collect({ article -> collectBasicCard(article) }).forEach(articlesService.&updateArticle)
@@ -34,7 +35,7 @@ class CollectBasicCardsService {
     @Timed(name = 'collectBasicCard')
     Article collectBasicCard(Article article) {
         if (article.basicCard == null) {
-            article.basicCard = new Card()
+            article.basicCard = new BasicCard()
         }
 
         article.basicCard.id = article.id
@@ -112,10 +113,10 @@ class CollectBasicCardsService {
 
     static boolean determineImage(Article article) {
         if (article.fromPocket.containsKey('image')) {
-            article.basicCard.image = new Card.Image(src: article.fromPocket.image['src'])
+            article.basicCard.image = new CardImage(src: article.fromPocket.image['src'])
         }
         if (article.fromPocket.containsKey('images') && article.fromPocket.images.containsKey('1') ) {
-            article.basicCard.image = new Card.Image(src: article.fromPocket.images['1']['src'])
+            article.basicCard.image = new CardImage(src: article.fromPocket.images['1']['src'])
         }
         return true
     }
