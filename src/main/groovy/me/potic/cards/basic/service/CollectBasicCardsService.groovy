@@ -29,7 +29,10 @@ class CollectBasicCardsService {
         Collection<Article> articlesToProcess = articlesService.findNonActualArticles(articlesRequestSize)
         log.info("got ${articlesToProcess.size()} articles to collect basic cards...")
 
-        articlesToProcess.collect({ article -> collectBasicCard(article) }).forEach(articlesService.&updateArticle)
+        articlesToProcess.collect({ article -> collectBasicCard(article) }).forEach({ article ->
+            article.fromPocket = null
+            articlesService.updateArticle(article)
+        })
     }
 
     @Timed(name = 'collectBasicCard')

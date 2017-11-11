@@ -4,6 +4,7 @@ import com.codahale.metrics.annotation.Timed
 import groovy.util.logging.Slf4j
 import groovyx.net.http.HttpBuilder
 import me.potic.cards.basic.domain.Article
+import me.potic.cards.basic.domain.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
@@ -82,33 +83,56 @@ class ArticlesService {
     }
 
     @Timed(name = 'getUserUnreadArticles')
-    Collection<Article> getUserUnreadArticles(String accessToken, String cursorId, Integer count, Integer minLength, Integer maxLength) {
-        log.info "requesting $count articles longer than $minLength and shorter than $maxLength from cursor $cursorId"
+    Collection<Article> getUserUnreadArticles(User user, String cursorId, Integer count, Integer minLength, Integer maxLength) {
+        log.info "requesting $count articles for user ${user.id} longer than $minLength and shorter than $maxLength from cursor $cursorId"
 
         try {
-            def query = [:]
+            String params = "userId: \"${user.id}\""
             if (cursorId != null) {
-                query['cursorId'] = cursorId
+                params += ", cursorId: \"${cursorId}\""
             }
             if (count != null) {
-                query['count'] = count
+                params += ", count: ${count}"
             }
             if (minLength != null) {
-                query['minLength'] = minLength
+                params += ", minLength: ${minLength}"
             }
             if (maxLength != null) {
-                query['maxLength'] = maxLength
+                params += ", maxLength: ${maxLength}"
             }
 
-            return articlesServiceRest.get {
-                request.headers['Authorization'] = "Bearer $accessToken".toString()
-
-                request.uri.path = '/user/me/article/unread'
-                request.uri.query = query
+            def response = articlesServiceRest.post {
+                request.uri.path = '/graphql'
+                request.contentType = 'application/json'
+                request.body = [ query: """
+                    {
+                      unread(${params}) {
+                        basicCard {
+                            id
+                            pocketId
+                            actual
+                            url
+                            title
+                            source
+                            excerpt
+                            image {
+                                src
+                            }
+                        }
+                      }
+                    }
+                """ ]
             }
+
+            List errors = response.errors
+            if (errors != null && !errors.empty) {
+                throw new RuntimeException("Request failed: $errors")
+            }
+
+            return response.data.unread.collect({ new Article(it) })
         } catch (e) {
-            log.error "requesting $count articles longer than $minLength and shorter than $maxLength from cursor $cursorId failed: $e.message", e
-            throw new RuntimeException("requesting $count articles longer than $minLength and shorter than $maxLength from cursor $cursorId failed: $e.message", e)
+            log.error "requesting $count articles for user ${user.id} longer than $minLength and shorter than $maxLength from cursor $cursorId failed: $e.message", e
+            throw new RuntimeException("requesting $count articles for user ${user.id} longer than $minLength and shorter than $maxLength from cursor $cursorId failed: $e.message", e)
         }
     }
 }
