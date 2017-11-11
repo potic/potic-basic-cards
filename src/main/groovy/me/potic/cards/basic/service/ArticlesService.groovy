@@ -33,9 +33,29 @@ class ArticlesService {
                     {
                       withNonActualBasicCard(count: ${count}) {
                         id
+                        fromPocket {
+                            item_id
+                            resolved_id
+                            given_url
+                            resolved_url
+                            given_title
+                            resolved_title
+                            excerpt
+                            image {
+                                src
+                            }
+                            images {
+                                src
+                            }
+                        }
                       }
                     }
                 """ ]
+            }
+
+            List errors = response.errors
+            if (errors != null && !errors.empty) {
+                throw new RuntimeException("Request failed: $errors")
             }
 
             return response.data.withNonActualBasicCard.collect({ new Article(it) })

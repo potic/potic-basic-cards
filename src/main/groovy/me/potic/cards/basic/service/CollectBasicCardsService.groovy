@@ -34,10 +34,7 @@ class CollectBasicCardsService {
 
     @Timed(name = 'collectBasicCard')
     Article collectBasicCard(Article article) {
-        if (article.basicCard == null) {
-            article.basicCard = new BasicCard()
-        }
-
+        article.basicCard = new BasicCard()
         article.basicCard.id = article.id
         article.basicCard.actual = true
         article.basicCard.actual &= determinePocketId(article)
@@ -112,11 +109,11 @@ class CollectBasicCardsService {
     }
 
     static boolean determineImage(Article article) {
-        if (article.fromPocket.containsKey('image')) {
-            article.basicCard.image = new CardImage(src: article.fromPocket.image['src'])
+        if (article.fromPocket.image != null) {
+            article.basicCard.image = new CardImage(src: article.fromPocket.image.src)
         }
-        if (article.fromPocket.containsKey('images') && article.fromPocket.images.containsKey('1') ) {
-            article.basicCard.image = new CardImage(src: article.fromPocket.images['1']['src'])
+        if (article.fromPocket.images != null && article.fromPocket.images.size() > 0 ) {
+            article.basicCard.image = new CardImage(src: article.fromPocket.images.first().src)
         }
         return true
     }

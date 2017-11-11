@@ -7,14 +7,5 @@ import groovy.transform.ToString
 @ToString(includeNames = true)
 class PocketImage {
 
-    String image_id
-    String item_id
-
     String src
-
-    String caption
-    String credit
-
-    String height
-    String width
 }
