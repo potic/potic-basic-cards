@@ -3,7 +3,9 @@ package me.potic.cards.basic.controller
 import com.codahale.metrics.annotation.Timed
 import groovy.util.logging.Slf4j
 import me.potic.cards.basic.domain.Card
+import me.potic.cards.basic.domain.User
 import me.potic.cards.basic.service.ArticlesService
+import me.potic.cards.basic.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
@@ -15,6 +17,9 @@ class GetCardsController {
 
     @Autowired
     ArticlesService articlesService
+
+    @Autowired
+    UserService userService
 
     @Timed(name = 'user.me.cards.basic')
     @CrossOrigin
@@ -29,7 +34,8 @@ class GetCardsController {
         log.info 'receive GET request for /user/me/cards/basic'
 
         try {
-            return articlesService.getUserUnreadArticles(principal.token, cursorId, count, minLength, maxLength).collect({ article -> article.basicCard })
+            User user = userService.findUserByAuth0Token(principal.token)
+            return articlesService.getUserUnreadArticles(user, cursorId, count, minLength, maxLength).collect({ article -> article.basicCard })
         } catch (e) {
             log.error "GET request for /user/me/cards/basic failed: $e.message", e
             throw new RuntimeException("GET request for /user/me/cards/basic failed: $e.message", e)

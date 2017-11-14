@@ -2,16 +2,14 @@ package me.potic.cards.basic.domain
 
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
-import groovy.transform.builder.Builder
 
-@Builder
+@ToString(includes = [ 'id' ])
 @EqualsAndHashCode
-@ToString(includeNames = true)
-class Article {
+class User {
 
     String id
 
-    PocketArticle fromPocket
+    Collection<String> socialIds
 
-    Card card
+    String pocketAccessToken
 }
