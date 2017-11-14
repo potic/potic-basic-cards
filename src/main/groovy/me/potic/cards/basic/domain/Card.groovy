@@ -5,7 +5,7 @@ import groovy.transform.ToString
 
 @EqualsAndHashCode
 @ToString(includeNames = true)
-class BasicCard {
+class Card {
 
     String id
 

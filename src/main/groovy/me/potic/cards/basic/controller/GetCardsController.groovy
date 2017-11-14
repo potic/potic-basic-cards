@@ -2,7 +2,7 @@ package me.potic.cards.basic.controller
 
 import com.codahale.metrics.annotation.Timed
 import groovy.util.logging.Slf4j
-import me.potic.cards.basic.domain.BasicCard
+import me.potic.cards.basic.domain.Card
 import me.potic.cards.basic.domain.User
 import me.potic.cards.basic.service.ArticlesService
 import me.potic.cards.basic.service.UserService
@@ -24,7 +24,7 @@ class GetCardsController {
     @Timed(name = 'user.me.cards.basic')
     @CrossOrigin
     @GetMapping(path = '/user/me/cards/basic')
-    @ResponseBody Collection<BasicCard> getUserCards(
+    @ResponseBody Collection<Card> getUserCards(
             @RequestParam(value = 'cursorId', required = false) String cursorId,
             @RequestParam(value = 'count') Integer count,
             @RequestParam(value = 'minLength', required = false) Integer minLength,

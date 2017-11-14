@@ -24,7 +24,7 @@ class ArticlesService {
 
     @Timed(name = 'findNonActualArticles')
     Collection<Article> findNonActualArticles(int count) {
-        log.info "finding non-actual articles..."
+        log.debug "finding non-actual articles..."
 
         try {
             def response = articlesServiceRest.post {
@@ -68,7 +68,7 @@ class ArticlesService {
 
     @Timed(name = 'updateArticle')
     void updateArticle(Article article) {
-        log.info "updating article ${article}..."
+        log.debug "updating article ${article}..."
 
         try {
             articlesServiceRest.put {
@@ -84,7 +84,7 @@ class ArticlesService {
 
     @Timed(name = 'getUserUnreadArticles')
     Collection<Article> getUserUnreadArticles(User user, String cursorId, Integer count, Integer minLength, Integer maxLength) {
-        log.info "requesting $count articles for user ${user.id} longer than $minLength and shorter than $maxLength from cursor $cursorId"
+        log.debug "requesting $count articles for user ${user.id} longer than $minLength and shorter than $maxLength from cursor $cursorId"
 
         try {
             String params = "userId: \"${user.id}\""

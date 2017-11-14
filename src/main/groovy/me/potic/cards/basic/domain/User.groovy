@@ -1,8 +1,10 @@
 package me.potic.cards.basic.domain
 
+import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 
 @ToString(includes = [ 'id' ])
+@EqualsAndHashCode
 class User {
 
     String id

@@ -6,12 +6,12 @@ import groovy.transform.builder.Builder
 
 @Builder
 @EqualsAndHashCode
-@ToString
+@ToString(includeNames = true)
 class Article {
 
     String id
 
     PocketArticle fromPocket
 
-    BasicCard basicCard
+    Card card
 }
