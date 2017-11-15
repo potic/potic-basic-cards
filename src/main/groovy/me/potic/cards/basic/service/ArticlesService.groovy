@@ -32,7 +32,7 @@ class ArticlesService {
                 request.contentType = 'application/json'
                 request.body = [ query: """
                     {
-                      withNonActualBasicCard(count: ${count}) {
+                      withNonActualCard(count: ${count}) {
                         id
                         fromPocket {
                             item_id
@@ -107,7 +107,7 @@ class ArticlesService {
                 request.body = [ query: """
                     {
                       unread(${params}) {
-                        basicCard {
+                        card {
                             id
                             pocketId
                             actual
