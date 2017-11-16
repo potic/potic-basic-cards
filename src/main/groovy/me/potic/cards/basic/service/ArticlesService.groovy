@@ -59,7 +59,7 @@ class ArticlesService {
                 throw new RuntimeException("Request failed: $errors")
             }
 
-            return response.data.withNonActualBasicCard.collect({ new Article(it) })
+            return response.data.withNonActualCard.collect({ new Article(it) })
         } catch (e) {
             log.error "finding non-actual articles failed: $e.message", e
             throw new RuntimeException("finding non-actual articles failed", e)
