@@ -35,7 +35,7 @@ class GetCardsController {
 
         try {
             User user = userService.findUserByAuth0Token(principal.token)
-            return articlesService.getUserUnreadArticles(user, cursorId, count, minLength, maxLength).collect({ article -> article.basicCard })
+            return articlesService.getUserUnreadArticles(user, cursorId, count, minLength, maxLength).collect({ article -> article.card })
         } catch (e) {
             log.error "GET request for /user/me/cards/basic failed: $e.message", e
             throw new RuntimeException("GET request for /user/me/cards/basic failed: $e.message", e)
