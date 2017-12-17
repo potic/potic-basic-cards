@@ -26,7 +26,7 @@ after_success:
 - bash <(curl -s https://codecov.io/bash)
 
 before_script:
-- docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+- docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
 - eval "$(ssh-agent -s)"
 - chmod 600 deployment_keys/deploy_test
 - ssh-add deployment_keys/deploy_test
@@ -34,7 +34,7 @@ before_script:
 - ssh-add deployment_keys/deploy_prod
 
 script:
-- export DOCKER_REPO=potic/potic-basic-cards
+- export DOCKER_REPO=potic/potic-cards
 - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH | tr '/' '-' ; fi`
 - export TAG_VERSION=`cat VERSION`.$TRAVIS_BUILD_NUMBER
 - docker build -t $DOCKER_REPO:travis-$TRAVIS_BUILD_NUMBER .
@@ -46,7 +46,6 @@ script:
 
 env:
   global:
-  - secure: cXT9p3EHSZkZM46x7zsMChP13ogp7LZi9d7TwMVEI55yi1dN5gu76rueeKw8hYP+qKHRvzElSNcuwnf1ZigzuEnMzv+alpBzONX33Fj7jL5bas6x08paXdkSl6uPNW/JBb9f5OBZmTI6Ec3W+5Qbovn3ugVnm4Htj6lc9Vg6EjsGWmZFs+qGI1FBXlm8eP0mL+AZC0iBM+nCekP69N2inBueWI/U51ftRD1SsIicG7aeO0f62olhCHEplqqSMvuisd8qUQfEkCnUIxuxjAse3WtR2L/p+BG+3JJGC+RJbhF80fr1cVXPpmhCqBCz9OFNnngY5gj0kOlF07Zj2PeILwRDhU9MryVL0x8B/CBF1I6Il8yPfCPuEXhNhFDNSdPmrHYpZPLLQnWVKVfrhy38PJBeii/43qjaNNeqcwuwVZFW1FAr7tFnX4UvK8bmA1f4QvJNiPls+ndlj5dPEiaOuarjIuHPquoj0iz3fgotcwCLdRZCjL0Yo03c3OY8jSUfddGN7kN1tdWO72z+pADqlHuh4rK81AAOsiMCRKMN1+dbPR/6BWOPzInNGGtKfuxhAzPY9UZ4XVDbTgZnj2Xiam4NYFGXaFUzxXO4ar6h6nwoWM1TggSb63WluB1LXkBzJYr8KYXsY783Lhqz6GJn6o5fqEWpFVTd9uiOxHsI8Ck= # DOCKER_EMAIL
   - secure: x1aJ08iA+o3joYtG66Lfuzd3zES7xxywYydiGn6WPzBlmps8DIdK1EvMTecTaO+xhrm6oZfK3d71i3+z4JiUckmUpONIy2xtQ7R+Eux8zg2Y6y0/kdv4VYH7R6MIF+HWTIm7ukjiridA2aet28vmc3/yaP0E59vUYigg2WWBtXQoImLC6VqSjMuHxA9sXux9woWBHXns1PAz+garfY108yomR1W+ZXf21H97qhkxMpm3XCRL1fp1yddaJH0KR9nP107dl60TNX1fPab64RYigsgXTKxQt/2xDF6v9HdaiD0xyaauz9/SirYn6CMHhdOISY5CgR4/eMAoXjq8JDv4wVU2830THYahKAyK0GRWZzJUmkQ0I5VL06liyQBjkjJQUUoEtYG2I1np2/3BNIr+ujWeDKio/a2BywosulxrOq3IbtykuB0wWxCLpLTdf5ykEVbI7Wt/Z3DL3VzmRQXVdoZc+ZTfapSfwELxpBhkTAoBiceQ4OEFdFM5pbLsQ5t+ea9Oqg4auq9///v55KrnOaB5pAtz6FVu40LZlBMiZLsre4AkqY8oke/hxzcNJ4m4kYQznCcm6GqOM2IqLD0Tumm2huPgPzX6TYdLAMf0Vf6CTtZmjxvhmD/MIXtcZuAjmU5863yiuOoEFeORFDnr7eWGkiP2umZ+v+Rz9vSoIyk= # DOCKER_USERNAME
   - secure: eh4UViItqf6/dKeuriXaJzaiKMyRClOD0gzRZOhkIbkudBIfYrpkSAMTvkuoJn6zmzJDqv/9DfZUY01nsbEyUffTq6iA7zEfhyd7NmggnLUbARwC4X4zEDzgeHb17qeLysq+PfOzOiT3haUdn/ZSL+m3pQRralTTE33DnW4rEDZL4DTynOePWOciLmRQJX7HD2yE1q5LTQ1QEOty6ebrMjjbiHew5qGv5dX4A5S7tl40xyamuDyXV262EBL9KdKc480wpLseKqwqGb91O1C7DHvQBhm08pouwVM/vVqY8EjzgRKS2JqDi7ZmyY7lkidm9ffm84oxiH2QtCnHdAQPv87GF7b6CE5lk+3L3EyCARfTnzVYVdAOQ4RQFJHLeiAX6sfeMaKhM22SPUniXaZjpANZxC6b+qNf6A8ZaSsD29q0JhMwPc2fpLCfmyHIVETEfMtNOx94wsYCu6UgTaV/D+TAcS9PMhEFLCZnlqoOAwGkgREuV2MR0MN/Zi/tg+l3Ol+opm2aWXNF2/uZMy29Xh6XbVHOhsgwFgJcT1LhdI1fIp/j2zlVw3n/cIgJI/HfD6QzHrdkLSasJcQD15dmn/vLREGxXwRgSrI915VZqE6WXzG3/5Tisi4FcTtkz6Z3oxFfyqWmC01YQE35EhanEFVr46hy9vJr8zvo/IcLEVA= # DOCKER_PASSWORD
   - secure: U5oql6uNuIkJ8Rk5HYfEMRNCMRXJIcL95Mg71NfQzb0+tfZL/Buj0zGrKQO0Q6nGawbJ8XjdoS3ik1BjgscObc6tDey+Sm/pUiiI2SHIeU5X9UVyp5NZJFUI5tSODGdRcq7Zdf5qJPPtXf6PUJOOdtt2bMpM3sgimsIBTVYoaST248IXJV+PJFVZ6BnQYPNsnogXUxO/rvEazDLE2e40/C55Y2ajexVRkO60+vygLOp6lb6fPrxZn3s1807Fy0sd1eatTx364MnYvsLmeyJU4AHqM+KOL6cbn7cjcbr0lX6qEvJZyd1eEOvcwY5bIUtI6JeIy0sB3a/2YY1K4gjntRCulOFhPT1FVJodJjiM++1isaoJ0yqOUBa0ucY0DTEWNpYdI6w7zjhN/JbLvqEj4mogTyYbSx3NW33MXLLSxgETA1cYdQwcMGvgu8PRuy6bZDUAQ64FWYNnJZhAHfl6UfvzZUoVVXkeKoH7qSGIwm47NfIf4/Olv2DF0buVjN/zKnIbb26FqMrsXHnGtAmyUIa9T0GSrXPQJwM6GmiJQU+VTh+KE19u4gbYJvNedQqwfA2cArXn88Th+WhypOyoUU0GqtfkLUwCPV2LzyRbwmwucw0wTCG9XY1nyZWQT4eOTW4kMLeHq7xI9nNp6UmK57B5aZnHN5pTYPXiCnINrHk= # DEPLOY_TEST_USER

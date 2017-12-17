@@ -1,19 +1,19 @@
-= potic-basic-cards
+= potic-cards
 :linkattrs:
 
-Service for collecting and serving the most basic article info using cards.
+Service for collecting article info using cards.
 
 == Travis job
 
-image:https://travis-ci.org/potic/potic-basic-cards.svg?branch=develop["Travis job", link="https://travis-ci.org/potic/potic-basic-cards"]
+image:https://travis-ci.org/potic/potic-cards.svg?branch=develop["Travis job", link="https://travis-ci.org/potic/potic-cards"]
 
 == Code coverage
 
-image:https://codecov.io/gh/potic/potic-basic-cards/branch/develop/graph/badge.svg["Code coverage", link="https://codecov.io/gh/potic/potic-basic-cards"]
+image:https://codecov.io/gh/potic/potic-cards/branch/develop/graph/badge.svg["Code coverage", link="https://codecov.io/gh/potic/potic-cards"]
 
 == Docker repository
 
-https://hub.docker.com/r/potic/potic-basic-cards/
+https://hub.docker.com/r/potic/potic-cards/
 
 == Documentation
 
