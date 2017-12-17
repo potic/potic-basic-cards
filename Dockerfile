@@ -1,12 +1,12 @@
 FROM openjdk:8
 
-RUN mkdir -p /usr/src/potic-cards && mkdir -p /usr/app
+RUN mkdir -p /usr/src/potic-cards && mkdir -p /opt
 
 COPY build/distributions/* /usr/src/potic-cards/
 
-RUN unzip /usr/src/potic-cards/potic-cards-*.zip -d /usr/app/ && ln -s /usr/app/potic-cards-* /usr/app/potic-cards
+RUN unzip /usr/src/potic-cards/potic-cards-*.zip -d /opt/ && ln -s /opt/potic-cards-* /opt/potic-cards
 
-WORKDIR /usr/app/potic-cards
+WORKDIR /opt/potic-cards
 
 EXPOSE 8080
 ENV ENVIRONMENT_NAME test

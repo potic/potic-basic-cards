@@ -4,7 +4,6 @@ import com.codahale.metrics.annotation.Timed
 import groovy.util.logging.Slf4j
 import groovyx.net.http.HttpBuilder
 import me.potic.cards.basic.domain.Article
-import me.potic.cards.basic.domain.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
@@ -79,60 +78,6 @@ class ArticlesService {
         } catch (e) {
             log.error "updating article ${article} failed: $e.message", e
             throw new RuntimeException("updating article ${article} failed", e)
-        }
-    }
-
-    @Timed(name = 'getUserUnreadArticles')
-    Collection<Article> getUserUnreadArticles(User user, String cursorId, Integer count, Integer minLength, Integer maxLength) {
-        log.debug "requesting $count articles for user ${user.id} longer than $minLength and shorter than $maxLength from cursor $cursorId"
-
-        try {
-            String params = "userId: \"${user.id}\""
-            if (cursorId != null) {
-                params += ", cursorId: \"${cursorId}\""
-            }
-            if (count != null) {
-                params += ", count: ${count}"
-            }
-            if (minLength != null) {
-                params += ", minLength: ${minLength}"
-            }
-            if (maxLength != null) {
-                params += ", maxLength: ${maxLength}"
-            }
-
-            def response = articlesServiceRest.post {
-                request.uri.path = '/graphql'
-                request.contentType = 'application/json'
-                request.body = [ query: """
-                    {
-                      unread(${params}) {
-                        card {
-                            id
-                            pocketId
-                            actual
-                            url
-                            title
-                            source
-                            excerpt
-                            image {
-                                src
-                            }
-                        }
-                      }
-                    }
-                """ ]
-            }
-
-            List errors = response.errors
-            if (errors != null && !errors.empty) {
-                throw new RuntimeException("Request failed: $errors")
-            }
-
-            return response.data.unread.collect({ new Article(it) })
-        } catch (e) {
-            log.error "requesting $count articles for user ${user.id} longer than $minLength and shorter than $maxLength from cursor $cursorId failed: $e.message", e
-            throw new RuntimeException("requesting $count articles for user ${user.id} longer than $minLength and shorter than $maxLength from cursor $cursorId failed: $e.message", e)
         }
     }
 }
