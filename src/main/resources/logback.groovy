@@ -11,14 +11,14 @@ appender('STDOUT', ConsoleAppender) {
 }
 
 appender('FILE', RollingFileAppender) {
-    file = "${System.getenv('LOG_PATH') ?: 'logs'}/potic-basic-cards.log"
+    file = "${System.getenv('LOG_PATH') ?: 'logs'}/potic-cards.log"
 
     encoder(PatternLayoutEncoder) {
         pattern = '%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n'
     }
 
     rollingPolicy(TimeBasedRollingPolicy) {
-        FileNamePattern = "${System.getenv('LOG_PATH') ?: 'logs'}/potic-basic-cards.%d{yyyy-MM-dd}.log"
+        FileNamePattern = "${System.getenv('LOG_PATH') ?: 'logs'}/potic-cards.%d{yyyy-MM-dd}.log"
     }
 }
 
