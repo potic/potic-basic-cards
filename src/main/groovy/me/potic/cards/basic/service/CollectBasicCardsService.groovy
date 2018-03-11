@@ -30,8 +30,7 @@ class CollectBasicCardsService {
         log.debug("got ${articlesToProcess.size()} articles to collect basic cards...")
 
         articlesToProcess.collect({ article -> collectBasicCard(article) }).forEach({ article ->
-            article.fromPocket = null
-            articlesService.updateArticle(article)
+            articlesService.updateArticleCard(article.id, article.card)
         })
     }
 

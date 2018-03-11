@@ -4,6 +4,7 @@ import com.codahale.metrics.annotation.Timed
 import groovy.util.logging.Slf4j
 import groovyx.net.http.HttpBuilder
 import me.potic.cards.basic.domain.Article
+import me.potic.cards.basic.domain.Card
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
@@ -65,19 +66,18 @@ class ArticlesService {
         }
     }
 
-    @Timed(name = 'updateArticle')
-    void updateArticle(Article article) {
-        log.debug "updating article ${article}..."
+    void updateArticleCard(String articleId, Card card) {
+        log.debug "updating article #${articleId} with card ${card}..."
 
         try {
             articlesServiceRest.put {
-                request.uri.path = '/article'
+                request.uri.path = "/article/${articleId}"
                 request.contentType = 'application/json'
-                request.body = article
+                request.body = card
             }
         } catch (e) {
-            log.error "updating article ${article} failed: $e.message", e
-            throw new RuntimeException("updating article ${article} failed", e)
+            log.error "updating article #${articleId} with card ${card} failed: $e.message", e
+            throw new RuntimeException("updating article #${articleId} with card ${card} failed", e)
         }
     }
 }
