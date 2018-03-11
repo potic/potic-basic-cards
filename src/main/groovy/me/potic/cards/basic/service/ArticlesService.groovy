@@ -70,8 +70,8 @@ class ArticlesService {
         log.debug "updating article #${articleId} with card ${card}..."
 
         try {
-            articlesServiceRest.put {
-                request.uri.path = "/article/${articleId}"
+            articlesServiceRest.post {
+                request.uri.path = "/article/${articleId}/card"
                 request.contentType = 'application/json'
                 request.body = card
             }
