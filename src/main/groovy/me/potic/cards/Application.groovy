@@ -1,4 +1,4 @@
-package me.potic.cards.basic
+package me.potic.cards
 
 import com.codahale.metrics.MetricRegistry
 import com.codahale.metrics.Reporter

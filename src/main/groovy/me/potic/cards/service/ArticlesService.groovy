@@ -1,10 +1,10 @@
-package me.potic.cards.basic.service
+package me.potic.cards.service
 
 import com.codahale.metrics.annotation.Timed
 import groovy.util.logging.Slf4j
 import groovyx.net.http.HttpBuilder
-import me.potic.cards.basic.domain.Article
-import me.potic.cards.basic.domain.Card
+import me.potic.cards.domain.Article
+import me.potic.cards.domain.Card
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
@@ -42,6 +42,7 @@ class ArticlesService {
                             given_title
                             resolved_title
                             excerpt
+                            time_added
                             image {
                                 src
                             }

@@ -1,4 +1,4 @@
-package me.potic.cards.basic.domain
+package me.potic.cards.domain
 
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
@@ -15,6 +15,8 @@ class PocketArticle {
 
     String given_title
     String resolved_title
+
+    Long time_added
 
     String excerpt
 

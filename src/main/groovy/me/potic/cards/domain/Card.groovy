@@ -1,4 +1,4 @@
-package me.potic.cards.basic.domain
+package me.potic.cards.domain
 
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
@@ -9,8 +9,6 @@ class Card {
 
     String id
 
-    long timestamp
-
     String pocketId
 
     String url
@@ -20,6 +18,8 @@ class Card {
     String source
 
     String excerpt
+
+    Long addedTimestamp
 
     CardImage image
 }

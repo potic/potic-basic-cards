@@ -1,10 +1,9 @@
-package me.potic.cards.basic.service
+package me.potic.cards.service
 
-import com.codahale.metrics.annotation.Timed
 import groovy.util.logging.Slf4j
-import me.potic.cards.basic.domain.Article
-import me.potic.cards.basic.domain.Card
-import me.potic.cards.basic.domain.CardImage
+import me.potic.cards.domain.Article
+import me.potic.cards.domain.Card
+import me.potic.cards.domain.CardImage
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.scheduling.annotation.Scheduled
@@ -20,8 +19,7 @@ class CollectBasicCardsService {
     @Autowired
     ArticlesService articlesService
 
-    @Scheduled(fixedDelay = 30_000L)
-    @Timed(name = 'collectBasicCards')
+    @Scheduled(fixedDelay = 10_000L)
     void collectBasicCards() {
         log.info("collecting basic cards...")
 
@@ -33,8 +31,7 @@ class CollectBasicCardsService {
         })
     }
 
-    @Timed(name = 'collectBasicCard')
-    Article collectBasicCard(Article article) {
+    static Article collectBasicCard(Article article) {
         article.card = new Card()
         article.card.id = article.id
 
@@ -45,6 +42,8 @@ class CollectBasicCardsService {
         determineTitle(article)
 
         determineSource(article)
+
+        determineAddedTimestamo(article)
 
         determineExcerpt(article)
 
@@ -100,6 +99,12 @@ class CollectBasicCardsService {
             }
 
             article.card.source = url.substring(startIndex, endIndex)
+        }
+    }
+
+    static void determineAddedTimestamo(Article article) {
+        if (article.fromPocket.time_added) {
+            article.card.addedTimestamp = article.fromPocket.time_added
         }
     }
 
