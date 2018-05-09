@@ -9,6 +9,8 @@ class Card {
 
     String id
 
+    long timestamp
+
     String pocketId
 
     String url
