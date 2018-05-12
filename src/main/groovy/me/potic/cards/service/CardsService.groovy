@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service
 
 @Service
 @Slf4j
-class CollectBasicCardsService {
+class CardsService {
 
     @Value(value = '${articles.request.size}')
     int articlesRequestSize
@@ -20,18 +20,18 @@ class CollectBasicCardsService {
     ArticlesService articlesService
 
     @Scheduled(fixedDelay = 10_000L)
-    void collectBasicCards() {
-        log.info("collecting basic cards...")
+    void prepareOutdatedCards() {
+        log.info("preparing outdated cards...")
 
-        Collection<Article> articlesToProcess = articlesService.findNonActualArticles(articlesRequestSize)
-        log.debug("got ${articlesToProcess.size()} articles to collect basic cards...")
+        Collection<Article> articlesToPrepareCards = articlesService.findArticlesWithOldestCard(articlesRequestSize)
+        log.debug("got ${articlesToPrepareCards.size()} articles to preparing cards...")
 
-        articlesToProcess.collect({ article -> collectBasicCard(article) }).forEach({ article ->
+        articlesToPrepareCards.collect({ article -> prepareCard(article) }).forEach({ article ->
             articlesService.updateArticleCard(article.id, article.card)
         })
     }
 
-    static Article collectBasicCard(Article article) {
+    static Article prepareCard(Article article) {
         article.card = new Card()
         article.card.id = article.id
 
@@ -43,7 +43,7 @@ class CollectBasicCardsService {
 
         determineSource(article)
 
-        determineAddedTimestamo(article)
+        determineAddedTimestamp(article)
 
         determineExcerpt(article)
 
@@ -102,7 +102,7 @@ class CollectBasicCardsService {
         }
     }
 
-    static void determineAddedTimestamo(Article article) {
+    static void determineAddedTimestamp(Article article) {
         if (article.fromPocket.time_added) {
             article.card.addedTimestamp = article.fromPocket.time_added
         }

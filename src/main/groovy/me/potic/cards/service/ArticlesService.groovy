@@ -1,6 +1,5 @@
 package me.potic.cards.service
 
-import com.codahale.metrics.annotation.Timed
 import groovy.util.logging.Slf4j
 import groovyx.net.http.HttpBuilder
 import me.potic.cards.domain.Article
@@ -22,9 +21,8 @@ class ArticlesService {
         }
     }
 
-    @Timed(name = 'findNonActualArticles')
-    Collection<Article> findNonActualArticles(int count) {
-        log.debug "finding non-actual articles..."
+    Collection<Article> findArticlesWithOldestCard(int count) {
+        log.debug "finding articles with oldest cards..."
 
         try {
             def response = articlesServiceRest.post {
@@ -32,7 +30,7 @@ class ArticlesService {
                 request.contentType = 'application/json'
                 request.body = [ query: """
                     {
-                      withNonActualCard(count: ${count}) {
+                      withOldestCard(count: ${count}) {
                         id
                         fromPocket {
                             item_id
@@ -60,10 +58,10 @@ class ArticlesService {
                 throw new RuntimeException("Request failed: $errors")
             }
 
-            return response.data.withNonActualCard.collect({ new Article(it) })
+            return response.data.withOldestCard.collect({ new Article(it) })
         } catch (e) {
-            log.error "finding non-actual articles failed: $e.message", e
-            throw new RuntimeException("finding non-actual articles failed", e)
+            log.error "finding articles with oldest cards failed: $e.message", e
+            throw new RuntimeException("finding articles with oldest cards failed", e)
         }
     }
 
