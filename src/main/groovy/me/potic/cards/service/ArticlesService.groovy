@@ -52,8 +52,6 @@ class ArticlesService {
                     }
                 """ ]
             }
-            
-            log.debug "response for articles with oldest cards: ${response}"
 
             List errors = response.errors
             if (errors != null && !errors.empty) {
